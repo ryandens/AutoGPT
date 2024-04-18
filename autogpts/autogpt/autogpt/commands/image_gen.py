@@ -89,7 +89,7 @@ def generate_image_with_hf(prompt: str, output_file: Path, agent: Agent) -> str:
             json={
                 "inputs": prompt,
             },
-        )
+        timeout=60)
 
         if response.ok:
             try:
@@ -199,7 +199,7 @@ def generate_image_with_sd_webui(
             "n_iter": 1,
             **extra,
         },
-    )
+    timeout=60)
 
     logger.info(f"Image Generated for prompt: '{prompt}'")
 
