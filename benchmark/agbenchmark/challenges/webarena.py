@@ -284,7 +284,7 @@ class WebArenaChallenge(BaseChallenge):
             cls.SOURCE_URI_PREFIX,
             "https://api.junglegym.ai/get_webarena_by_task_id?task_id=",
         )
-        results = requests.get(source_url).json()["data"]
+        results = requests.get(source_url, timeout=60).json()["data"]
         if not results:
             raise ValueError(f"Could not fetch challenge {source_uri}")
         return cls.from_challenge_spec(WebArenaChallengeSpec.parse_obj(results[0]))
