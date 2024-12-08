@@ -32,6 +32,7 @@ from agbenchmark.utils.prompts import (
 )
 
 from .base import BaseChallenge, ChallengeInfo
+from security import safe_command
 
 logger = logging.getLogger(__name__)
 
@@ -319,8 +320,7 @@ class BuiltinChallenge(BaseChallenge):
                     f"(eval type: {ground.eval.type})..."
                 )
                 if ground.eval.type == "python":
-                    result = subprocess.run(
-                        [sys.executable, file_path],
+                    result = safe_command.run(subprocess.run, [sys.executable, file_path],
                         cwd=os.path.abspath(workspace),
                         capture_output=True,
                         text=True,
@@ -334,8 +334,7 @@ class BuiltinChallenge(BaseChallenge):
                         yield relative_file_path, f.read()
         else:
             if ground.eval.type == "pytest":
-                result = subprocess.run(
-                    [sys.executable, "-m", "pytest"],
+                result = safe_command.run(subprocess.run, [sys.executable, "-m", "pytest"],
                     cwd=os.path.abspath(workspace),
                     capture_output=True,
                     text=True,
