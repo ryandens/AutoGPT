@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from typing import ClassVar, Iterator, Literal
 
 import pytest
-import requests
 from agent_protocol_client import AgentApi, Step
 from pydantic import BaseModel, validator, ValidationError
 
@@ -12,6 +11,7 @@ from agbenchmark.config import AgentBenchmarkConfig
 from agbenchmark.utils.data_types import Category, EvalResult
 
 from .base import BaseChallenge, ChallengeInfo
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -284,7 +284,7 @@ class WebArenaChallenge(BaseChallenge):
             cls.SOURCE_URI_PREFIX,
             "https://api.junglegym.ai/get_webarena_by_task_id?task_id=",
         )
-        results = requests.get(source_url).json()["data"]
+        results = safe_requests.get(source_url).json()["data"]
         if not results:
             raise ValueError(f"Could not fetch challenge {source_uri}")
         return cls.from_challenge_spec(WebArenaChallengeSpec.parse_obj(results[0]))
